@@ -1,5 +1,5 @@
 ---                                                                  
-- name: install apache with defenitions                              
+- name: hw-ansible-1.1                           
   hosts: nodes                                                       
                                                                      
   tasks:                                                             
