@@ -1,0 +1,40 @@
+---                                                                  
+- name: install apache with defenitions                              
+  hosts: nodes                                                       
+                                                                     
+  tasks:                                                             
+  - name: install httpd                                             
+    yum:                                                             
+      name: httpd                                                    
+      state: latest                                                  
+                                                                     
+  - name: Snable service                                             
+    service:                                                         
+      name: httpd                                                    
+      state: started                                                 
+                                                                     
+  - name: Enable service                                             
+    service:                                                         
+      name: httpd                                                    
+      enabled: yes                                                   
+                                                                     
+  - name: get facts                                                  
+    service_facts:                                                   
+                                                                     
+  - name: check service status                                       
+    debug:                                                           
+      var: ansible_facts.services["httpd.service"]                   
+                                                                     
+  - name: create file                                                
+    copy:                                                            
+      content: "Welcome to my web server"                            
+      dest: "/var/www/html/index.html"                               
+                                                                     
+  - name: open ports                                                 
+    firewalld:                                                       
+      port: "{{ item }}"                                             
+      permanent: yes                                                 
+      state: enabled                                                 
+    loop:                                                            
+      - 80/tcp                                                       
+      - 443/tcp                                                      
