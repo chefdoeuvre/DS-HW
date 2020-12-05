@@ -8,7 +8,7 @@
       name: httpd                                                    
       state: latest                                                  
                                                                      
-  - name: Snable service                                             
+  - name: Enable service                                             
     service:                                                         
       name: httpd                                                    
       state: started                                                 
