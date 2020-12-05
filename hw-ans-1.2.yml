@@ -1,0 +1,20 @@
+---
+- name: hw-ansible-1.2
+  hosts: nodes
+
+  tasks:
+  - name: Disable service
+    service:
+      name: NetworkManager
+      enabled: no
+
+  - name: change grub
+    lineinfile:
+          dest: /etc/default/grub
+          regexp: "^GRUB_CMDLINE_LINUX="
+          line: 'GRUB_CMDLINE_LINUX="no_timer_check console=tty0 console=ttyS0,115200n8 elevator=noop crashkernel=auto net.ifnames=0 biosdevname=0"'
+          state: present
+          backup: yes
+
+  - name: grub2-mkconfig
+    shell: grub2-mkconfig
