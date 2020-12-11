@@ -1,0 +1,6 @@
+---
+# handlers file for hw-ansible-1.3-roles
+- name: curl check
+  uri: 
+    url: http://{{ ansible_hostname }}
+    status_code: 200

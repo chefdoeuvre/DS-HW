@@ -1,0 +1,40 @@
+---
+- name: include vars
+  include_vars: main.yml
+
+- name: install httpd
+  yum:
+    name: httpd
+    state: latest
+
+- name: start service
+  service:
+    name: httpd
+    state: started
+
+- name: Enable service
+  service:
+    name: httpd
+    enabled: yes
+
+- name: get facts
+  service_facts:
+
+- name: check service status
+  debug:
+    var: ansible_facts.services["httpd.service"]
+
+- name: create file
+  copy:
+    content: "{{ html_content }}"
+    dest: "{{ html_dest }}"
+  notify: curl check
+
+- name: open ports
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ to_open }}"
+  changed_when: True
+  notify: curl check

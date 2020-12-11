@@ -1,4 +1,4 @@
----                                                                  
+--
 - name: hw-ansible-1.1                           
   hosts: nodes                                                       
                                                                      
