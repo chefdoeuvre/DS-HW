@@ -1,0 +1,5 @@
+---
+- name: hw-ansible-1.4
+  hosts: nodes
+  roles:
+    - hw-ansible-1.4-roles

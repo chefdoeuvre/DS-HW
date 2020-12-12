@@ -1,0 +1,77 @@
+---
+- name: include vars
+  include_vars: main.yml
+
+- name: install policycoreutils-python
+  yum:
+    name: policycoreutils-python
+
+- name: install service
+  yum:
+    name: vsftpd
+    state: latest
+
+- name: start and enable service
+  service:
+    name: vsftpd
+    state: started
+    enabled: yes
+
+- name: get facts
+  service_facts:
+
+- name: check service status
+  debug:
+    var: ansible_facts.services["httpd.service"]
+
+- name: set SELinux ftpd_anon_write boolean
+  seboolean:
+    name: ftpd_anon_write
+    state: yes
+    persistent: yes
+
+- name: open default ports
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ default_ports }}"
+
+- name: backup vftpd config
+  copy:
+    src: /etc/vsftpd/vsftpd.conf
+    remote_src: yes
+    dest: /etc/vsftpd/vsftpd.conf.orig
+    backup: yes
+
+- name: open passive ports if enabled
+  firewalld:
+    port: "{{ passiv_ports }}"
+    permanent: yes
+    state: enabled
+  when: open_passiv_ports
+
+- name: Create a directory if it does not exist
+  file:
+    path: "{{ anon_root }}"
+    state: directory
+    mode: '0755'
+
+- name: create a file to check up later
+  copy:
+    content: "ftp works just fine"
+    dest: "{{ anon_root }}/testfile"
+
+
+- name: template a conf file to default dest
+  template:  
+    src: vsftpd.conf.j2
+    dest:  /etc/vsftpd/vsftpd.conf
+  notify: restart vsftpd
+  
+- name: testing
+  get_url:
+    url: "ftp://{{ ansible_host }}/pub/testfile"
+    dest: testfile
+
+

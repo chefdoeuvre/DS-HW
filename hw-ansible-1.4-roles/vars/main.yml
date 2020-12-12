@@ -1,0 +1,23 @@
+---
+# vars file for hw-ansible-1.4-roles
+
+#port
+
+default_ports: ["20/tcp", "21/tcp"]
+
+pub_directory: "/var/ftp/pub"
+
+# playbook
+open_passiv_ports: True
+passiv_ports: "40000-50000/tcp"
+
+#j2 template
+pasv_min_port: 40000
+pasv_max_port: 50000
+
+anonymous_enable: "ON"
+anon_root: "/var/ftp/pub"
+no_anon_password: "YES"
+hide_ids: "YES"
+
+
