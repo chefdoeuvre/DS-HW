@@ -11,19 +11,6 @@
     name: vsftpd
     state: latest
 
-- name: start and enable service
-  service:
-    name: vsftpd
-    state: started
-    enabled: yes
-
-- name: get facts
-  service_facts:
-
-- name: check service status
-  debug:
-    var: ansible_facts.services["httpd.service"]
-
 - name: set SELinux ftpd_anon_write boolean
   seboolean:
     name: ftpd_anon_write
@@ -51,27 +38,38 @@
     state: enabled
   when: open_passiv_ports
 
-- name: Create a directory if it does not exist
+- name: Create anon_root directory
   file:
     path: "{{ anon_root }}"
     state: directory
-    mode: '0755'
+    owner: ftp
+    group: ftp
+    mode: '555'
 
-- name: create a file to check up later
-  copy:
-    content: "ftp works just fine"
-    dest: "{{ anon_root }}/testfile"
-
+- name: Create pub directory
+  file:
+    path: "{{ anon_root }}/pub"
+    state: directory
+    owner: ftp
+    group: ftp
+    mode: '777'
 
 - name: template a conf file to default dest
   template:  
     src: vsftpd.conf.j2
     dest:  /etc/vsftpd/vsftpd.conf
+    force: yes
   notify: restart vsftpd
-  
-- name: testing
-  get_url:
-    url: "ftp://{{ ansible_host }}/pub/testfile"
-    dest: testfile
 
+- name: start and enable service
+  service:
+    name: vsftpd
+    state: started
+    enabled: yes
 
+- name: get facts
+  service_facts:
+
+- name: check service status
+  debug:
+    var: ansible_facts.services["httpd.service"]

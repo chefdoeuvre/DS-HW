@@ -11,12 +11,12 @@
 #
 # Allow anonymous FTP? (Beware - allowed by default if you comment this out).
 
-anonymous_enable = {{ anonymous_enable }}
+anonymous_enable={{ anonymous_enable }}
 
 #
 # Uncomment this to allow local users to log in.
 # When SELinux is enforcing check for SE bool ftp_home_dir
-local_enable = YES
+local_enable=NO
 #
 # Uncomment this to enable any form of FTP write command.
 write_enable=YES
@@ -29,11 +29,15 @@ local_umask=022
 # has an effect if the above global write enable is activated. Also, you will
 # obviously need to create a directory writable by the FTP user.
 # When SELinux is enforcing check for SE bool allow_ftpd_anon_write, allow_ftpd_full_access
-#anon_upload_enable=YES
+
+anon_upload_enable={{ anon_upload_enable }}
+
+allow_writeable_chroot=YES
+
 #
 # Uncomment this if you want the anonymous FTP user to be able to create
 # new directories.
-#anon_mkdir_write_enable=YES
+anon_mkdir_write_enable=YES
 #
 # Activate directory messages - messages given to remote users when they
 # go into a certain directory.
@@ -101,7 +105,7 @@ xferlog_std_format=YES
 # (Warning! chroot'ing can be very dangerous. If using chroot, make sure that
 # the user does not have write access to the top level directory within the
 # chroot)
-#chroot_local_user=YES
+chroot_local_user=YES
 #chroot_list_enable=YES
 # (default follows)
 #chroot_list_file=/etc/vsftpd/chroot_list
@@ -130,9 +134,10 @@ pam_service_name=vsftpd
 userlist_enable=YES
 tcp_wrappers=YES
 
-no_anon_password = {{ no_anon_password }}
-hide_ids = {{ hide_ids }}
+no_anon_password={{ no_anon_password }}
+hide_ids={{ hide_ids }}
 
-pasv_min_port= {{ pasv_min_port }}
-pasv_max_port= {{ pasv_max_port }}
-anon_root = {{ anon_root }}
+pasv_min_port={{ pasv_min_port }}
+pasv_max_port={{ pasv_max_port }}
+anon_root={{ anon_root }}
+anon_mkdir_write_enable={{ anon_mkdir_write_enable }}
