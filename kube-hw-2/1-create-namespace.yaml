@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hw-prod
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hw-canary
